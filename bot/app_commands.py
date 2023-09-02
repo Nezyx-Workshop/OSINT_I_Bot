@@ -23,7 +23,7 @@ async def search_osint(ctx, search_type, query):
         'Authorization': f'Bearer {API_KEY}',
     }
     url = f'https://osint.industries/search?type={search_type}&query={query}'
-    response = requests.get(url, headers=headers, timeout=10)  # Added a timeout of 10 seconds
+    response = requests.get(url, headers=headers, timeout=10)  # Timeout of 10 seconds
 
     if response.status_code == 200:
         data = response.json()
