@@ -6,13 +6,14 @@ import os
 from discord.ext import commands as discord_commands
 from dotenv import load_dotenv
 from app_commands import search_email, search_phone
+import discord
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
-intents = discord_commands.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
-intents.message_content = True
+intents.messages = True
 bot = discord_commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
