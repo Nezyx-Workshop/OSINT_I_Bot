@@ -1,7 +1,5 @@
-"""Commands related to the OSINT API interactions."""
-
 import os
-import requests
+import aiohttp
 from discord.ext import commands
 
 # Load the OSINT API key from environment variables
@@ -23,13 +21,17 @@ async def search_osint(ctx, search_type, query):
         'Authorization': f'Bearer {API_KEY}',
     }
     url = f'https://osint.industries/search?type={search_type}&query={query}'
-    response = requests.get(url, headers=headers, timeout=10)  # Timeout of 10 seconds
-
-    if response.status_code == 200:
-        data = response.json()
-        await ctx.send(data['result'])
-    else:
-        await ctx.send(f'Error: {response.status_code}')
+    
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(url, headers=headers, timeout=10) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    await ctx.send(data['result'])
+                else:
+                    await ctx.send(f'Error: {response.status}')
+        except aiohttp.ClientError as e:
+            await ctx.send(f'Error: {str(e)}')
 
 # Add the commands to the bot's command list
 # This makes the commands available for users to call
